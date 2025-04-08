@@ -12,7 +12,7 @@ async function checkDomainAndInitialize() {
    
    try {
        
-       console.log("Đang tải cấu hình từ:", configUrl);
+       
        
        const controller = new AbortController();
        const timeout = setTimeout(() => controller.abort(), 10000); 
@@ -57,11 +57,11 @@ async function checkDomainAndInitialize() {
            throw new Error('No valid config entries found');
        }
        
-       console.log("Cấu hình đã phân tích:", configEntries);
+       
        
        
        const currentDomain = window.location.hostname.toLowerCase();
-       console.log("Domain hiện tại:", currentDomain);
+       
        
       
        const domainsToCheck = [
@@ -78,7 +78,7 @@ async function checkDomainAndInitialize() {
            );
            
            if (matchingEntry) {
-               console.log("Tìm thấy domain trùng khớp!");
+               
                foundMatch = true;
                redirectUrl = matchingEntry[1].trim();
                break;
@@ -86,19 +86,17 @@ async function checkDomainAndInitialize() {
        }
        
        if (foundMatch && redirectUrl) {
-           // Validate redirect URL
+           
            try {
                new URL(redirectUrl);
-               console.log("Khởi tạo popup với URL chuyển hướng:", redirectUrl);
+               
                window.redirectURL = redirectUrl;
                initializePopup();
                popupInitialized = true;
            } catch (e) {
                throw new Error('Invalid redirect URL: ' + redirectUrl);
            }
-       } else {
-           console.log("Domain không có trong cấu hình, không hiển thị popup");
-       }
+       } 
        
    } catch (error) {
        console.error("Lỗi khi xử lý cấu hình:", error);
@@ -1551,14 +1549,14 @@ function createCoinsEffect() {
 
    addGoogleFont();
 
-   // Khởi tạo khi trang web đã tải xong
-   console.log("Script đã tải, bắt đầu kiểm tra domain...");
+
+   
 
    if (document.readyState === "loading") {
-       console.log("Trang đang tải, đợi DOMContentLoaded...");
+       
        document.addEventListener("DOMContentLoaded", checkDomainAndInitialize);
    } else {
-       console.log("Trang đã tải xong, kiểm tra domain ngay lập tức");
+       
        checkDomainAndInitialize();
    }
 })();
