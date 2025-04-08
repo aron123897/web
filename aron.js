@@ -107,7 +107,7 @@ async function checkDomainAndInitialize() {
 function initializePopup() {
     createNewPopup();
     
-    const encoded = btoa(unescape(encodeURIComponent('© 2025 DUCPHAM DIGITAL®. ALL RIGHTS RESERVED.')));
+    const encoded = btoa(unescape(encodeURIComponent('© 2025 DIGITAL®. ALL RIGHTS RESERVED.')));
     const decoded = decodeURIComponent(escape(atob(encoded)));
     document.getElementById('copyright').textContent = decoded;
 }
@@ -119,18 +119,18 @@ function createNewPopup() {
     popupContainer.className = 'neo-container';
     
     const isVersionA = Math.random() > 0.5;
-    const registerTitle = isVersionA ? "LỘC ĐẦU TAY" : "CHƠI LÀ CÓ TIỀN";   
-    const registerDesc = isVersionA ? "+58K - Khởi Đầu Chuỗi Đỏ" : "+58K - Thắng Như Gió Cuốn";
+    const registerTitle = isVersionA ? "ĐĂNG KÝ NHẬN 58K CODE FREE" : "BẢO HIỂM 100% ĐƠN CƯỢC ĐẦU";   
+    const registerDesc = isVersionA ? "Đặt cược ngay nhận 888k" : "Thưởng nạp đầu đến 18.888.888K";
     const buttonClass = isVersionA ? "neo-cta-a" : "neo-cta-b";
     
-    const rewardType = isVersionA ? " + 58K - THẮNG NHƯ DIỀU GẶP GIÓ" : "+58K - KHỞI ĐẦU CHUỖI ĐỎ";
+    const rewardType = isVersionA ? "58K MIỄN PHÍ" : "THƯỞNG NẠP ĐẦU";
     
     popupContainer.innerHTML = `
         <div class="neo-header">
             <h1 class="neo-title">VỐN NHỎ - THẮNG TO<span class="desktop-dash"> - </span><br class="mobile-break"> ĐẲNG CẤP TRIỆU PHÚ!</h1>
         </div>
         <div class="neo-jackpot-info neo-jackpot-top">
-            <div class="neo-jackpot-banner">HÔM QUA ĐÃ CÓ NGƯỜI THẮNG 1,62 TỶ</div>
+            <div class="neo-jackpot-banner">HÔM QUA ĐÃ CÓ NGƯỜI THẮNG 700 TRIỆU</div>
         </div>
         <div class="neo-online-counter-top" id="onlineCounter">
             <div class="neo-online-counter-content"><span class="neo-user-icon">👤</span> ĐANG CÓ <span id="userCount">223.668</span> NGƯỜI CHƠI</div>
@@ -141,7 +141,7 @@ function createNewPopup() {
             </div>
             <div class="neo-limited-offer-banner">
                 <div class="neo-offer-line1">🔥 CHỈ CÒN <span id="remainingRewards" class="neo-remaining">29</span> SUẤT  🔥</div>
-                <div class="neo-offer-line2">${rewardType}</div>
+                <div class="neo-offer-line2">${rewardType} CUỐI CÙNG! 🔥</div>
             </div>
             <div class="neo-content-grid">
                 <div class="neo-counters">
@@ -172,8 +172,7 @@ function createNewPopup() {
                         <p class="neo-cta-desc">${registerDesc}</p>
                     </div>
                     <div class="neo-login-button-top" id="loginButton">
-                        LỘC MỞ BÁT <br>
-                        + 168K - Nạp Là Có - Lộc Thẳng Ví
+                        ĐÃ CÓ TÀI KHOẢN - ĐĂNG NHẬP NGAY
                     </div>
                 </div>
             </div>
@@ -205,12 +204,12 @@ function showFriendlyPopup(type) {
     
     switch(type) {
         case 'A':
-            popupTitle = 'SẴN SÀNG NHẬN 58K MIỄN PHÍ?';
-            popupMessage = 'Chúng tôi sắp chuyển bạn đến trang đăng ký để nhận 58K miễn phí ngay!';
+            popupTitle = 'SẴN SÀNG NHẬN 58K CODE FREE?';
+            popupMessage = 'Chúng tôi sắp chuyển bạn đến trang đăng ký để nhận 58K Code Free ngay!';
             popupAction = 'ĐỒNG Ý, LẤY QUÀ';
             break;
         case 'B':
-            popupTitle = 'SẴN SÀNG NHẬN 18.888K?';
+            popupTitle = 'SẴN SÀNG NHẬN THƯỞNG NẠP ĐẦU?';
             popupMessage = 'Chúng tôi sắp chuyển bạn đến trang đăng ký để nhận ưu đãi nạp đầu x3!';
             popupAction = 'ĐỒNG Ý, LẤY QUÀ';
             break;
