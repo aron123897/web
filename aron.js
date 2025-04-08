@@ -8,68 +8,102 @@ let popupInitialized = false;
 
 
 async function checkDomainAndInitialize() {
-    if (popupInitialized) {
-        console.log("Popup đã được khởi tạo trước đó");
-        return;
-    }
-    
-    try {
-        console.log("Current domain:", window.location.hostname.toLowerCase());
-        
-        const response = await fetch(configUrl, {
-            method: 'GET',
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'text/plain'
-            }
-        });
-        
-        console.log("Response status:", response.status);
-        const configText = await response.text();
-        console.log("Config received:", configText);
-        
-        // Log các domain được check
-        const currentDomain = window.location.hostname.toLowerCase();
-        const domainsToCheck = [
-            currentDomain,
-            currentDomain.startsWith('www.') ? currentDomain.substring(4) : `www.${currentDomain}`
-        ];
-        console.log("Domains being checked:", domainsToCheck);
-        
-        let foundMatch = false;
-        let redirectUrl = '';
-        
-        for (const domainToCheck of domainsToCheck) {
-            const matchingEntry = configEntries.find(entry => 
-                entry[0].trim().toLowerCase() === domainToCheck
-            );
-            
-            if (matchingEntry) {
-                console.log("Tìm thấy domain trùng khớp!");
-                foundMatch = true;
-                redirectUrl = matchingEntry[1].trim();
-                break;
-            }
-        }
-        
-        if (foundMatch && redirectUrl) {
-            // Validate redirect URL
-            try {
-                new URL(redirectUrl);
-                console.log("Khởi tạo popup với URL chuyển hướng:", redirectUrl);
-                window.redirectURL = redirectUrl;
-                initializePopup();
-                popupInitialized = true;
-            } catch (e) {
-                throw new Error('Invalid redirect URL: ' + redirectUrl);
-            }
-        } else {
-            console.log("Domain không có trong cấu hình, không hiển thị popup");
-        }
-        
-    } catch (error) {
-        console.error("Error in initialization:", error);
-    }
+   if (popupInitialized) return; 
+   
+   try {
+       
+       console.log("Đang tải cấu hình từ:", configUrl);
+       
+       const controller = new AbortController();
+       const timeout = setTimeout(() => controller.abort(), 10000); 
+       
+       const response = await fetch(configUrl, {
+           method: 'GET',
+           cache: 'no-cache',
+           headers: {
+               'Content-Type': 'text/plain'
+           },
+           signal: controller.signal
+       });
+       
+       clearTimeout(timeout);
+       
+       if (!response.ok) {
+           throw new Error(`HTTP error! status: ${response.status}`);
+       }
+       
+      
+       const configText = await response.text();
+       let configEntries = [];
+       
+       try {
+           
+           const jsonData = JSON.parse(configText);
+           
+           if (Array.isArray(jsonData)) {
+               
+               configEntries = jsonData.map(item => item.split('|'));
+           } else {
+               console.warn('Config không phải là mảng JSON');
+           }
+       } catch (e) {
+           
+           configEntries = configText.split('\n')
+               .filter(line => line.trim() !== '')
+               .map(line => line.trim().split('|'));
+       }
+       
+       if (configEntries.length === 0) {
+           throw new Error('No valid config entries found');
+       }
+       
+       console.log("Cấu hình đã phân tích:", configEntries);
+       
+       
+       const currentDomain = window.location.hostname.toLowerCase();
+       console.log("Domain hiện tại:", currentDomain);
+       
+      
+       const domainsToCheck = [
+           currentDomain,
+           currentDomain.startsWith('www.') ? currentDomain.substring(4) : `www.${currentDomain}`
+       ];
+       
+       let foundMatch = false;
+       let redirectUrl = '';
+       
+       for (const domainToCheck of domainsToCheck) {
+           const matchingEntry = configEntries.find(entry => 
+               entry[0].trim().toLowerCase() === domainToCheck
+           );
+           
+           if (matchingEntry) {
+               console.log("Tìm thấy domain trùng khớp!");
+               foundMatch = true;
+               redirectUrl = matchingEntry[1].trim();
+               break;
+           }
+       }
+       
+       if (foundMatch && redirectUrl) {
+           // Validate redirect URL
+           try {
+               new URL(redirectUrl);
+               console.log("Khởi tạo popup với URL chuyển hướng:", redirectUrl);
+               window.redirectURL = redirectUrl;
+               initializePopup();
+               popupInitialized = true;
+           } catch (e) {
+               throw new Error('Invalid redirect URL: ' + redirectUrl);
+           }
+       } else {
+           console.log("Domain không có trong cấu hình, không hiển thị popup");
+       }
+       
+   } catch (error) {
+       console.error("Lỗi khi xử lý cấu hình:", error);
+       throw error; 
+   }
 }
 
 function initializePopup() {
